@@ -1,0 +1,28 @@
+{
+  "name": "yelp-camp",
+  "version": "1.0.0",
+  "description": "web developer boot camp yelp camp",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smukhiyabeen/yelp-camp.git"
+  },
+  "author": "Subarna Mukhiyabeen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smukhiyabeen/yelp-camp/issues"
+  },
+  "homepage": "https://github.com/smukhiyabeen/yelp-camp#readme",
+  "dependencies": {
+    "ejs": "^2.6.2",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0"
+  }
+}
