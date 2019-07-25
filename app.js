@@ -1,41 +1,74 @@
+/* eslint-disable no-console */
+/* eslint-disable no-dupe-keys */
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-fkjkr.mongodb.net/yelp-camp?retryWrites=true&w=majority`;
 const app = express();
 const port = 3000;
 
+// SCHEMA SETUP
+const campgroundSchema = new mongoose.Schema({
+  name: String,
+  image: String,
+  description: String,
+});
 
-const campgrounds = [
-    {name: 'Salmon Creek', image: 'https://cdn.pixabay.com/photo/2018/10/28/16/58/lake-3779280_640.jpg'},
-    {name: 'Granite Lake', image: 'https://cdn.pixabay.com/photo/2016/08/28/17/05/camping-1626412_640.jpg'},
-    {name: 'Red Rocks', image: 'https://cdn.pixabay.com/photo/2015/05/23/00/25/utah-780108_640.jpg'},    
-]
+const Campground = mongoose.model('Campground', campgroundSchema);
 
-app.use(bodyParser.urlencoded({ extended: true}));
-app.set('view engine', 'ejs')
+mongoose.connect(uri, { useNewUrlParser: true });
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render('landing');
+  res.render('landing');
 });
 
 app.get('/campgrounds', (req, res) => {
-    res.render('campgrounds', {campgrounds, campgrounds});
+  Campground.find({}, (err, allCampgrounds) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('index', { campgrounds: allCampgrounds });
+    }
+  });
 });
 
 app.post('/campgrounds', (req, res) => {
-    let newCampground = {
-        name: req.body.name,
-        image: req.body.image
-    };
+  const newCampground = {
+    name: req.body.name,
+    image: req.body.image,
+    description: req.body.description,
+  };
 
-    campgrounds.push(newCampground);
-
-    res.redirect('/campgrounds')
+  // eslint-disable-next-line no-unused-vars
+  Campground.create(newCampground, (err, newlyCreated) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/campgrounds');
+    }
+  });
 });
 
 app.get('/campgrounds/new', (req, res) => {
-    res.render('new')
+  res.render('new');
+});
+
+app.get('/campgrounds/:id', (req, res) => {
+  Campground.findById(req.params.id, (err, foundCampground) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render('show', { campground: foundCampground });
+    }
+  });
 });
 
 app.listen(port, () => {
-    console.log(`App started on port ${port}`);
+  console.log(`App started on port ${port}`);
 });
