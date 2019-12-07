@@ -11,7 +11,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const app = express();
 const port = 3000;
 
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 seedDB();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -52,11 +52,13 @@ app.get('/campgrounds/new', (req, res) => {
   res.render('new');
 });
 
+// SHOW ROUTE - shows info about one campground
 app.get('/campgrounds/:id', (req, res) => {
-  Campground.findById(req.params.id, (err, foundCampground) => {
+  Campground.findById(req.params.id).populate('comments').exec((err, foundCampground) => {
     if (err) {
       console.log(err);
     } else {
+      console.log(foundCampground);
       res.render('show', { campground: foundCampground });
     }
   });
