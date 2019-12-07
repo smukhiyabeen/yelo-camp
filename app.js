@@ -21,6 +21,20 @@ const PORT = process.env.port || 3000;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 seedDB();
+
+// PASSPORT CONFIGURATION
+app.use(require('express-session')({
+  secret: 'hi im sub',
+  resave: false,
+  saveUninitialized: false,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.static(`${__dirname}/public`));
@@ -103,6 +117,28 @@ app.post('/campgrounds/:id/comments', (req, res) => {
         }
       });
     }
+  });
+});
+
+
+// AUTH ROUTES
+// show register form
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.post('/register', (req, res) => {
+  const { username, password } = req.body;
+  const newUser = new User({ username });
+  // eslint-disable-next-line consistent-return
+  User.register(newUser, password, (err, user) => {
+    if (err) {
+      console.log(err);
+      return res.render('register');
+    }
+    passport.authenticate('local')(req, res, () => {
+      res.redirect('/campgrounds');
+    });
   });
 });
 
