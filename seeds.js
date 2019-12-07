@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const Campground = require('./models/campground.js');
 const Comment = require('./models/comment');
 
@@ -5,22 +6,22 @@ const data = [
   {
     name: 'Awesome Camp',
     image: 'https://images.unsplash.com/photo-1532339142463-fd0a8979791a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80',
-    description: 'A awesome camp the you should go to',
+    description: 'A awesome camp that you should go to',
   },
   {
     name: 'Night Light Camp',
     image: 'https://images.unsplash.com/photo-1496947850313-7743325fa58c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80',
-    description: 'A awesome night camp the you should go to',
+    description: 'A awesome night camp that you should go to',
   },
   {
     name: 'Green Light Camp',
     image: 'https://images.unsplash.com/photo-1493810329807-db131c118da5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1952&q=80',
-    description: 'A awesome camp with green lights the you should go to',
+    description: 'A awesome camp with green lights that you should go to',
   },
   {
     name: 'Winter Camp',
     image: 'https://images.unsplash.com/photo-1517217451453-818405428795?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80',
-    description: 'A awesome winter camp with green lights the you should go to',
+    description: 'A awesome winter camp with green lights that you should go to',
   },
 ];
 

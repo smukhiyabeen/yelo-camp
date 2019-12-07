@@ -4,12 +4,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Campground = require('./models/campground');
+const Comment = require('./models/comment');
 const seedDB = require('./seeds');
 require('dotenv').config();
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-fkjkr.mongodb.net/yelp-camp?retryWrites=true&w=majority`;
 const app = express();
-const port = 3000;
+const PORT = process.env.port || 3000;
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -26,7 +27,7 @@ app.get('/campgrounds', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      res.render('index', { campgrounds: allCampgrounds });
+      res.render('campgrounds/index', { campgrounds: allCampgrounds });
     }
   });
 });
@@ -49,7 +50,7 @@ app.post('/campgrounds', (req, res) => {
 });
 
 app.get('/campgrounds/new', (req, res) => {
-  res.render('new');
+  res.render('campgrounds/new');
 });
 
 // SHOW ROUTE - shows info about one campground
@@ -58,12 +59,47 @@ app.get('/campgrounds/:id', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(foundCampground);
-      res.render('show', { campground: foundCampground });
+      res.render('campgrounds/show', { campground: foundCampground });
     }
   });
 });
 
-app.listen(port, () => {
-  console.log(`App started on port ${port}`);
+
+// COMMENTS ROUTES
+
+app.get('/campgrounds/:id/comments/new', (req, res) => {
+  // Find campgrounds by id
+  Campground.findById(req.params.id, (err, campground) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // render new comment form
+      res.render('comments/new', { campground });
+    }
+  });
+});
+
+app.post('/campgrounds/:id/comments', (req, res) => {
+  // lookup campground using ID
+  Campground.findById(req.params.id, (err, campground) => {
+    if (err) {
+      console.log(err);
+      res.redirect('/campgrounds');
+    } else {
+      Comment.create(req.body.comment, (err, comment) => {
+        if (err) {
+          console.log(err);
+        } else {
+          campground.comments.push(comment);
+          campground.save();
+          // eslint-disable-next-line no-underscore-dangle
+          res.redirect(`/campgrounds/${campground._id}`);
+        }
+      });
+    }
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`App started on port ${PORT}`);
 });
