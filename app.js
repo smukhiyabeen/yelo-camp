@@ -1,11 +1,17 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-console */
 /* eslint-disable no-dupe-keys */
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
 const Campground = require('./models/campground');
 const Comment = require('./models/comment');
 const seedDB = require('./seeds');
+const User = require('./models/user');
+
 require('dotenv').config();
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-fkjkr.mongodb.net/yelp-camp?retryWrites=true&w=majority`;
