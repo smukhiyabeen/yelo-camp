@@ -6,7 +6,7 @@ const Comment = require('../models/comment');
 
 const router = express.Router({ mergeParams: true });
 
-// Middleware to talidate user is logged in
+// Middleware to validate user is logged in
 // eslint-disable-next-line consistent-return
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -41,6 +41,10 @@ router.post('/', isLoggedIn, (req, res) => {
         if (err) {
           console.log(err);
         } else {
+          // Add username and id to comment then save comment
+          comment.author.id = req.user._id;
+          comment.author.username = req.user.username;
+          comment.save();
           campground.comments.push(comment);
           campground.save();
           // eslint-disable-next-line no-underscore-dangle

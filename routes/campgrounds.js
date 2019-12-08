@@ -3,6 +3,14 @@ const Campground = require('../models/campground');
 
 const router = express.Router();
 
+// eslint-disable-next-line consistent-return
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+};
+
 // Index
 router.get('/', (req, res) => {
   Campground.find({}, (err, allCampgrounds) => {
@@ -14,27 +22,30 @@ router.get('/', (req, res) => {
   });
 });
 
-// Create campground
-router.post('/', (req, res) => {
+// CREATE campground
+router.post('/', isLoggedIn, (req, res) => {
   const newCampground = {
     name: req.body.name,
     image: req.body.image,
     description: req.body.description,
+    author: {
+      // eslint-disable-next-line no-underscore-dangle
+      id: req.user._id,
+      username: req.user.username,
+    },
   };
-
-
   // eslint-disable-next-line no-unused-vars
   Campground.create(newCampground, (err, newlyCreated) => {
     if (err) {
       console.log(err);
     } else {
-      res.redirect('/');
+      res.redirect('/campgrounds');
     }
   });
 });
 
 // New campground form
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
