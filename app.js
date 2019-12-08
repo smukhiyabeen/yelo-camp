@@ -18,6 +18,14 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const app = express();
 const PORT = process.env.port || 3000;
 
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+};
+
+
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 seedDB();
@@ -87,7 +95,7 @@ app.get('/campgrounds/:id', (req, res) => {
 
 // COMMENTS ROUTES
 
-app.get('/campgrounds/:id/comments/new', (req, res) => {
+app.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
   // Find campgrounds by id
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
@@ -99,7 +107,7 @@ app.get('/campgrounds/:id/comments/new', (req, res) => {
   });
 });
 
-app.post('/campgrounds/:id/comments', (req, res) => {
+app.post('/campgrounds/:id/comments', isLoggedIn, (req, res) => {
   // lookup campground using ID
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
@@ -140,6 +148,23 @@ app.post('/register', (req, res) => {
       res.redirect('/campgrounds');
     });
   });
+});
+
+// show login page
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/campgrounds',
+  failureRedirect: '/login',
+}));
+
+
+// show logout page
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/campgrounds');
 });
 
 app.listen(PORT, () => {
