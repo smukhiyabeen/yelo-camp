@@ -17,11 +17,11 @@ const indexRoutes = require('./routes/index');
 // use .env for DB environment variables
 require('dotenv').config();
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-fkjkr.mongodb.net/yelp-camp?retryWrites=true&w=majority`;
+const url = process.env.URL;
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 // seedDB(); // Seed the database
 
