@@ -28,6 +28,7 @@ router.post('/', isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     if (err) {
       console.log(err);
+      req.flash('error', 'Something went wrong');
       res.redirect('/campgrounds');
     } else {
       // eslint-disable-next-line no-shadow
@@ -41,6 +42,7 @@ router.post('/', isLoggedIn, (req, res) => {
           comment.save();
           campground.comments.push(comment);
           campground.save();
+          req.flash('success', 'Successfully added comment');
           // eslint-disable-next-line no-underscore-dangle
           res.redirect(`/campgrounds/${campground._id}`);
         }
@@ -67,6 +69,7 @@ router.put('/:comment_id/', checkCommentOwnership, (req, res) => {
     if (err) {
       res.redirect('back');
     } else {
+      req.flash('success', 'Comment deleted');
       res.redirect(`/campgrounds/${req.params.id}`);
     }
   });

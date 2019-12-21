@@ -19,6 +19,7 @@
   "homepage": "https://github.com/smukhiyabeen/yelp-camp#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
     "dotenv": "^8.0.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
