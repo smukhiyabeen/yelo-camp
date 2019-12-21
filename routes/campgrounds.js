@@ -1,31 +1,9 @@
 /* eslint-disable no-console */
 const express = require('express');
 const Campground = require('../models/campground');
+const { checkCampgroundOwnership, isLoggedIn } = require('../middleware');
 
 const router = express.Router();
-
-// eslint-disable-next-line consistent-return
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
-function checkCampgroundOwnership(req, res, next) {
-  if (req.isAuthenticated()) { // Validate the the user is logged in
-    Campground.findById(req.params.id, (err, foundCampground) => {
-      if (err) {
-        res.redirect('/back ');
-      // eslint-disable-next-line no-underscore-dangle
-      } else if (foundCampground.author.id.equals(req.user._id)) {
-        next();
-      }
-    });
-  } else {
-    res.redirect('back');
-  }
-}
 
 // Index - Shows all campgrounds
 router.get('/', (req, res) => {
