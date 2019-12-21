@@ -21,6 +21,7 @@ router.post('/', isLoggedIn, (req, res) => {
   const newCampground = {
     name: req.body.name,
     image: req.body.image,
+    price: req.body.price,
     description: req.body.description,
     author: {
       // eslint-disable-next-line no-underscore-dangle
