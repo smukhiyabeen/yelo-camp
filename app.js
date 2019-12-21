@@ -19,7 +19,7 @@ require('dotenv').config();
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-fkjkr.mongodb.net/yelp-camp?retryWrites=true&w=majority`;
 const app = express();
-const PORT = process.env.port || 3000;
+const PORT = process.env.PORT || 3000;
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
