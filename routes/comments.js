@@ -17,6 +17,21 @@ const isLoggedIn = (req, res, next) => {
   res.redirect('/login');
 };
 
+const checkCampgroundOwnership = (req, res, next) => {
+  if (req.isAuthenticated()) { // Validate the the user is logged in
+    Comment.findById(req.params.comment_id, (err, foundComment) => {
+      if (err) {
+        res.redirect('/back ');
+      // eslint-disable-next-line no-underscore-dangle
+      } else if (foundComment.author.id.equals(req.user._id)) {
+        next();
+      }
+    });
+  } else {
+    res.redirect('back');
+  }
+};
+
 // Comments New
 router.get('/new', isLoggedIn, (req, res) => {
   // Find campgrounds by id
@@ -58,7 +73,7 @@ router.post('/', isLoggedIn, (req, res) => {
 });
 
 // Comments EDIT route
-router.get('/:comment_id/edit', (req, res) => {
+router.get('/:comment_id/edit', checkCampgroundOwnership, (req, res) => {
   Comment.findById(req.params.comment_id, (err, foundComment) => {
     if (err) {
       res.redirect('back');
@@ -68,8 +83,8 @@ router.get('/:comment_id/edit', (req, res) => {
   });
 });
 
-
-router.put('/:comment_id/', (req, res) => {
+// Comments UPDATE route
+router.put('/:comment_id/', checkCampgroundOwnership, (req, res) => {
   // eslint-disable-next-line no-unused-vars
   Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, (err, updatedComment) => {
     if (err) {
@@ -81,7 +96,7 @@ router.put('/:comment_id/', (req, res) => {
 });
 
 // Comments DESTROY route
-router.delete('/:comment_id', (req, res) => {
+router.delete('/:comment_id',checkCampgroundOwnership, (req, res) => {
   Comment.findByIdAndRemove(req.params.comment_id, (err) => {
     if (err) {
       res.redirect('back');
