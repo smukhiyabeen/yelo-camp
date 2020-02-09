@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
-seedDB(); // Seed the database
+// seedDB(); // Seed the database
 
 // PASSPORT CONFIGURATION
 app.use(require('express-session')({
