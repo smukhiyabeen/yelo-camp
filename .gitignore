@@ -61,3 +61,8 @@ typings/
 .next
 
 .vscode
+
+cypress/fixtures
+cypress/plugins
+cypress/support
+cypress/videos
